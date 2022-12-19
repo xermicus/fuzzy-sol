@@ -1,0 +1,39 @@
+{{
+  "language": "Solidity",
+  "settings": {
+    "evmVersion": "berlin",
+    "libraries": {},
+    "metadata": {
+      "bytecodeHash": "ipfs",
+      "useLiteralContent": true
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "remappings": [],
+    "outputSelection": {
+      "*": {
+        "*": [
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "devdoc",
+          "userdoc",
+          "metadata",
+          "abi"
+        ]
+      }
+    }
+  },
+  "sources": {
+    "@openzeppelin/contracts/access/Ownable.sol": {
+      "content": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.8.0;\n\nimport \"../utils/Context.sol\";\n\n/**\n * @dev Contract module which provides a basic access control mechanism, where\n * there is an account (an owner) that can be granted exclusive access to\n * specific functions.\n *\n * By default, the owner account will be the one that deploys the contract. This\n * can later be changed with {transferOwnership}.\n *\n * This module is used through inheritance. It will make available the modifier\n * `onlyOwner`, which can be applied to your functions to restrict their use to\n * the owner.\n */\nabstract contract Ownable is Context {\n    address private _owner;\n\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\n\n    /**\n     * @dev Initializes the contract setting the deployer as the initial owner.\n     */\n    constructor() {\n        _setOwner(_msgSender());\n    }\n\n    /**\n     * @dev Returns the address of the current owner.\n     */\n    function owner() public view virtual returns (address) {\n        return _owner;\n    }\n\n    /**\n     * @dev Throws if called by any account other than the owner.\n     */\n    modifier onlyOwner() {\n        require(owner() == _msgSender(), \"Ownable: caller is not the owner\");\n        _;\n    }\n\n    /**\n     * @dev Leaves the contract without owner. It will not be possible to call\n     * `onlyOwner` functions anymore. Can only be called by the current owner.\n     *\n     * NOTE: Renouncing ownership will leave the contract without an owner,\n     * thereby removing any functionality that is only available to the owner.\n     */\n    function renounceOwnership() public virtual onlyOwner {\n        _setOwner(address(0));\n    }\n\n    /**\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\n     * Can only be called by the current owner.\n     */\n    function transferOwnership(address newOwner) public virtual onlyOwner {\n        require(newOwner != address(0), \"Ownable: new owner is the zero address\");\n        _setOwner(newOwner);\n    }\n\n    function _setOwner(address newOwner) private {\n        address oldOwner = _owner;\n        _owner = newOwner;\n        emit OwnershipTransferred(oldOwner, newOwner);\n    }\n}\n"
+    },
+    "@openzeppelin/contracts/utils/Context.sol": {
+      "content": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.8.0;\n\n/*\n * @dev Provides information about the current execution context, including the\n * sender of the transaction and its data. While these are generally available\n * via msg.sender and msg.data, they should not be accessed in such a direct\n * manner, since when dealing with meta-transactions the account sending and\n * paying for execution may not be the actual sender (as far as an application\n * is concerned).\n *\n * This contract is only required for intermediate, library-like contracts.\n */\nabstract contract Context {\n    function _msgSender() internal view virtual returns (address) {\n        return msg.sender;\n    }\n\n    function _msgData() internal view virtual returns (bytes calldata) {\n        return msg.data;\n    }\n}\n"
+    },
+    "contracts/Storage.sol": {
+      "content": "// SPDX-License-Identifier: BSD-3-Clause\npragma solidity ^0.8.6;\n\nimport \"@openzeppelin/contracts/access/Ownable.sol\";\n\ncontract Storage is Ownable {\n  /// @dev Bytes storage.\n  mapping(bytes32 => bytes) private _bytes;\n\n  /// @dev Bool storage.\n  mapping(bytes32 => bool) private _bool;\n\n  /// @dev Uint storage.\n  mapping(bytes32 => uint256) private _uint;\n\n  /// @dev Int storage.\n  mapping(bytes32 => int256) private _int;\n\n  /// @dev Address storage.\n  mapping(bytes32 => address) private _address;\n\n  /// @dev String storage.\n  mapping(bytes32 => string) private _string;\n\n  event Updated(bytes32 indexed key);\n\n  /**\n   * @param key The key for the record\n   */\n  function getBytes(bytes32 key) external view returns (bytes memory) {\n    return _bytes[key];\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function getBool(bytes32 key) external view returns (bool) {\n    return _bool[key];\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function getUint(bytes32 key) external view returns (uint256) {\n    return _uint[key];\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function getInt(bytes32 key) external view returns (int256) {\n    return _int[key];\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function getAddress(bytes32 key) external view returns (address) {\n    return _address[key];\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function getString(bytes32 key) external view returns (string memory) {\n    return _string[key];\n  }\n\n  /**\n   * @param key The key for the record\n   * @param value The value to set.\n   */\n  function setBytes(bytes32 key, bytes calldata value) external onlyOwner {\n    _bytes[key] = value;\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   * @param value The value to set.\n   */\n  function setBool(bytes32 key, bool value) external onlyOwner {\n    _bool[key] = value;\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   * @param value The value to set.\n   */\n  function setUint(bytes32 key, uint256 value) external onlyOwner {\n    _uint[key] = value;\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   * @param value The value to set.\n   */\n  function setInt(bytes32 key, int256 value) external onlyOwner {\n    _int[key] = value;\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   * @param value The value to set.\n   */\n  function setAddress(bytes32 key, address value) external onlyOwner {\n    _address[key] = value;\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   * @param value The value to set.\n   */\n  function setString(bytes32 key, string calldata value) external onlyOwner {\n    _string[key] = value;\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function deleteBytes(bytes32 key) external onlyOwner {\n    delete _bytes[key];\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function deleteBool(bytes32 key) external onlyOwner {\n    delete _bool[key];\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function deleteUint(bytes32 key) external onlyOwner {\n    delete _uint[key];\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function deleteInt(bytes32 key) external onlyOwner {\n    delete _int[key];\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function deleteAddress(bytes32 key) external onlyOwner {\n    delete _address[key];\n    emit Updated(key);\n  }\n\n  /**\n   * @param key The key for the record\n   */\n  function deleteString(bytes32 key) external onlyOwner {\n    delete _string[key];\n    emit Updated(key);\n  }\n}\n"
+    }
+  }
+}}
