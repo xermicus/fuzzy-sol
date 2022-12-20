@@ -1,7 +1,10 @@
 # `compile` crash
 **file**: 0x95ebebf79bf59b6dee7e7709d0f67bae81dca09c.sol
+
 **cmd**: solang compile --target substrate 0x95ebebf79bf59b6dee7e7709d0f67bae81dca09c.sol 2>&1
+
 **ret**: 134 
+
 **ver**: solang version v0.2.0-14-g3234e18e
 
 # Compiler Message
