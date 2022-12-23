@@ -17,8 +17,11 @@ ver=$($bin --version)
 cat<<EOF>>$report
 # \`compile\` crash
 **file**: $2
+
 **cmd**: $cmd
+
 **ret**: $ret 
+
 **ver**: $ver
 
 # Compiler Message
